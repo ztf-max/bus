@@ -20,7 +20,6 @@ import java.util.List;
  * counter控制器
  */
 @RestController
-
 public class CounterController {
 
   final CounterService counterService;
