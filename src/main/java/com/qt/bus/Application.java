@@ -1,12 +1,12 @@
-package com.tencent.wxcloudrun;
+package com.qt.bus;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class WxCloudRunApplication {
+public class Application {
 
   public static void main(String[] args) {
-    SpringApplication.run(WxCloudRunApplication.class, args);
+    SpringApplication.run(Application.class, args);
   }
 }
