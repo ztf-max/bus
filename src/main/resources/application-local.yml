@@ -1,0 +1,30 @@
+server:
+  port: 80
+
+spring:
+  # mysql 配置
+  datasource:
+    url: jdbc:mysql://sh-cynosdbmysql-grp-5lak13bw.sql.tencentcdb.com:20314/bus
+    username: root
+    password: Zhq12345678
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 200
+  # 控制文件上传大小
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+
+mybatis-plus:
+  mapper-locations: classpath*:mybatis/**/*Mapper.xml
+  global-config:
+    db-config:
+      # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+      logic-delete-field: deleted
+      # 逻辑已删除值(默认为 1) 这里设置为null主要是为了解决逻辑删除与唯一键约束的问题
+      logic-delete-value: "null"
+      # 逻辑未删除值(默认为 0)
+      logic-not-delete-value: 0
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
