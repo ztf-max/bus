@@ -8,7 +8,7 @@ import java.io.Serial;
 import java.math.BigDecimal;
 
 /**
- * 乘客实时位置表实体类
+ * 用户实时位置表实体类（包含乘客和司机）
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -19,7 +19,7 @@ public class UserLocation extends BaseDomain {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 关联乘客表ID
+     * 关联用户表ID
      */
     private Long userId;
 
@@ -32,4 +32,14 @@ public class UserLocation extends BaseDomain {
      * 经度
      */
     private BigDecimal longitude;
+
+    /**
+     * 车头朝向(0-360)，司机专用
+     */
+    private Float heading;
+
+    /**
+     * 速度，司机专用
+     */
+    private Float speed;
 }

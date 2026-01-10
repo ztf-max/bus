@@ -1,13 +1,13 @@
 package com.qt.bus.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.qt.bus.dao.model.User;
+import com.qt.bus.dao.model.Token;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 乘客表Mapper
+ * Token表Mapper
  */
 @Mapper
-public interface UsersMapper extends BaseMapper<User> {
+public interface TokenMapper extends BaseMapper<Token> {
 
 }

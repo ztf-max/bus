@@ -1,179 +1,189 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <artifactId>bus</artifactId>
-    <description>bus</description>
-    <groupId>com.qingtian</groupId>
-    <modelVersion>4.0.0</modelVersion>
-    <name>bus</name>
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <artifactId>bus</artifactId>
+  <description>bus</description>
+  <groupId>com.qingtian</groupId>
+  <modelVersion>4.0.0</modelVersion>
+  <name>bus</name>
+  <version>1.0.0</version>
 
-    <parent>
-        <artifactId>spring-boot-starter-parent</artifactId>
+
+  <parent>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <groupId>org.springframework.boot</groupId>
+    <version>3.4.12</version>
+
+  </parent>
+
+
+  <properties>
+    <baomidou.version>3.5.14</baomidou.version>
+    <commons-collections4.version>4.5.0</commons-collections4.version>
+    <commons-lang3.version>3.18.0</commons-lang3.version>
+    <fastjson2.version>2.0.58</fastjson2.version>
+    <guava.version>33.4.8-jre</guava.version>
+
+    <hutool.version>5.8.26</hutool.version>
+    <java.version>21</java.version>
+    <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+    <java-jwt.version>4.5.0</java-jwt.version>
+    <mapstruct.version>1.6.3</mapstruct.version>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-starter-data-redis</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-starter-security</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-starter-validation</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>httpclient5</artifactId>
+      <groupId>org.apache.httpcomponents.client5</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>mysql-connector-j</artifactId>
+      <groupId>com.mysql</groupId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+      <groupId>com.baomidou</groupId>
+      <version>${baomidou.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>mybatis-plus-jsqlparser</artifactId>
+      <groupId>com.baomidou</groupId>
+      <version>${baomidou.version}</version>
+    </dependency>
+
+
+    <dependency>
+      <artifactId>java-jwt</artifactId>
+      <groupId>com.auth0</groupId>
+      <version>${java-jwt.version}</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>hutool-core</artifactId>
+      <groupId>cn.hutool</groupId>
+      <version>${hutool.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>commons-lang3</artifactId>
+      <groupId>org.apache.commons</groupId>
+      <version>${commons-lang3.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>commons-collections4</artifactId>
+      <groupId>org.apache.commons</groupId>
+      <version>${commons-collections4.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>guava</artifactId>
+      <groupId>com.google.guava</groupId>
+      <version>${guava.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>fastjson2</artifactId>
+      <groupId>com.alibaba.fastjson2</groupId>
+      <version>${fastjson2.version}</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>lombok</artifactId>
+      <groupId>org.projectlombok</groupId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <artifactId>mapstruct</artifactId>
+      <groupId>org.mapstruct</groupId>
+      <version>${mapstruct.version}</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+
+  <repositories>
+    <repository>
+      <id>aliyun</id>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <url>https://maven.aliyun.com/repository/public/</url>
+    </repository>
+  </repositories>
+
+
+  <build>
+    <finalName>bus</finalName>
+    <plugins>
+      <plugin>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>
+              <artifactId>lombok</artifactId>
+              <groupId>org.projectlombok</groupId>
+            </exclude>
+          </excludes>
+        </configuration>
         <groupId>org.springframework.boot</groupId>
-        <version>3.4.12</version>
-    </parent>
+      </plugin>
 
-    <build>
-        <finalName>bus</finalName>
-        <plugins>
-            <plugin>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <artifactId>lombok</artifactId>
-                            <groupId>org.projectlombok</groupId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-                <groupId>org.springframework.boot</groupId>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <artifactId>lombok</artifactId>
-                            <groupId>org.projectlombok</groupId>
-                        </path>
-                        <path>
-                            <artifactId>lombok-mapstruct-binding</artifactId>
-                            <groupId>org.projectlombok</groupId>
-                            <version>${lombok-mapstruct-binding.version}</version>
-                        </path>
-                        <path>
-                            <artifactId>mapstruct-processor</artifactId>
-                            <groupId>org.mapstruct</groupId>
-                            <version>${mapstruct.version}</version>
-                        </path>
-                        <path>
-                            <artifactId>spring-boot-configuration-processor</artifactId>
-                            <groupId>org.springframework.boot</groupId>
-                        </path>
-                    </annotationProcessorPaths>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-                <groupId>org.apache.maven.plugins</groupId>
-            </plugin>
-        </plugins>
-    </build>
-
-    <dependencies>
-        <dependency>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <groupId>org.springframework.boot</groupId>
-        </dependency>
-        <dependency>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-            <groupId>org.springframework.boot</groupId>
-        </dependency>
-        <dependency>
-            <artifactId>spring-boot-starter-security</artifactId>
-            <groupId>org.springframework.boot</groupId>
-        </dependency>
-        <dependency>
-            <artifactId>spring-boot-starter-validation</artifactId>
-            <groupId>org.springframework.boot</groupId>
-        </dependency>
-        <dependency>
-            <artifactId>httpclient5</artifactId>
-            <groupId>org.apache.httpcomponents.client5</groupId>
-        </dependency>
-        <dependency>
-            <artifactId>mysql-connector-j</artifactId>
-            <groupId>com.mysql</groupId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-            <groupId>com.baomidou</groupId>
-            <version>${baomidou.version}</version>
-        </dependency>
-        <dependency>
-            <artifactId>mybatis-plus-jsqlparser</artifactId>
-            <groupId>com.baomidou</groupId>
-            <version>${baomidou.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <artifactId>hutool-core</artifactId>
-            <groupId>cn.hutool</groupId>
-            <version>${hutool.version}</version>
-        </dependency>
-        <dependency>
-            <artifactId>commons-lang3</artifactId>
-            <groupId>org.apache.commons</groupId>
-            <version>${commons-lang3.version}</version>
-        </dependency>
-        <dependency>
-            <artifactId>commons-collections4</artifactId>
-            <groupId>org.apache.commons</groupId>
-            <version>${commons-collections4.version}</version>
-        </dependency>
-        <dependency>
-            <artifactId>guava</artifactId>
-            <groupId>com.google.guava</groupId>
-            <version>${guava.version}</version>
-        </dependency>
-        <dependency>
-            <artifactId>fastjson2</artifactId>
-            <groupId>com.alibaba.fastjson2</groupId>
-            <version>${fastjson2.version}</version>
-        </dependency>
-
-        <dependency>
-            <artifactId>lombok</artifactId>
-            <groupId>org.projectlombok</groupId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <artifactId>mapstruct</artifactId>
-            <groupId>org.mapstruct</groupId>
-            <version>${mapstruct.version}</version>
-        </dependency>
-
-        <dependency>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <groupId>org.springframework.boot</groupId>
-            <scope>test</scope>
-        </dependency>
-
-    </dependencies>
-
-
-    <properties>
-        <baomidou.version>3.5.14</baomidou.version>
-        <commons-collections4.version>4.5.0</commons-collections4.version>
-        <commons-lang3.version>3.18.0</commons-lang3.version>
-        <fastjson2.version>2.0.58</fastjson2.version>
-        <guava.version>33.4.8-jre</guava.version>
-
-        <hutool.version>5.8.26</hutool.version>
-        <java.version>21</java.version>
-        <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-        <mapstruct.version>1.6.3</mapstruct.version>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
-    <repositories>
-        <repository>
-            <id>aliyun</id>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <url>https://maven.aliyun.com/repository/public/</url>
-        </repository>
-    </repositories>
-
-    <version>1.0.0</version>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <artifactId>lombok</artifactId>
+              <groupId>org.projectlombok</groupId>
+            </path>
+            <path>
+              <artifactId>lombok-mapstruct-binding</artifactId>
+              <groupId>org.projectlombok</groupId>
+              <version>${lombok-mapstruct-binding.version}</version>
+            </path>
+            <path>
+              <artifactId>mapstruct-processor</artifactId>
+              <groupId>org.mapstruct</groupId>
+              <version>${mapstruct.version}</version>
+            </path>
+            <path>
+              <artifactId>spring-boot-configuration-processor</artifactId>
+              <groupId>org.springframework.boot</groupId>
+            </path>
+          </annotationProcessorPaths>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

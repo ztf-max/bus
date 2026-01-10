@@ -12,13 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class JwtUserLoginInfo {
 
-    String env;
     String nickName;
-    String platform;
-    Integer clientType;
+    String userType;
     Long userId;
     Long teamId;
-    String teamName;
-    String companyId;
-    String role;
 }

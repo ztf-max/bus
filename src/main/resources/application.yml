@@ -1,6 +1,7 @@
 server:
   port: 80
   shutdown: graceful
+
 spring:
   application:
     name: qt-bus
@@ -12,3 +13,8 @@ spring:
   mvc:
     async:
       request-timeout: 600000
+
+# 微信小程序配置
+wechat:
+  appid: your_wechat_appid
+  secret: your_wechat_secret

@@ -43,28 +43,21 @@ public class AuthLoginContextHolder {
     }
 
 
-    public static String getLoginUserCompanyId() {
+
+    public static Long getLoginTeamId() {
         JwtUserLoginInfo jwtUserLoginInfo = getLoginUserInfo();
-        if (jwtUserLoginInfo == null || jwtUserLoginInfo.getCompanyId() == null) {
+        if (jwtUserLoginInfo == null || jwtUserLoginInfo.getTeamId() == null) {
             return null;
         }
-        return jwtUserLoginInfo.getCompanyId();
+        return jwtUserLoginInfo.getTeamId();
     }
 
-    public static String getLoginUserPlatform() {
+    public static String getLoginUserType() {
         JwtUserLoginInfo jwtUserLoginInfo = getLoginUserInfo();
-        if (jwtUserLoginInfo == null || jwtUserLoginInfo.getPlatform() == null) {
+        if (jwtUserLoginInfo == null || jwtUserLoginInfo.getUserType() == null) {
             return null;
         }
-        return jwtUserLoginInfo.getPlatform();
-    }
-
-    public static Integer getLoginUserClientType() {
-        JwtUserLoginInfo jwtUserLoginInfo = getLoginUserInfo();
-        if (jwtUserLoginInfo == null || jwtUserLoginInfo.getClientType() == null) {
-            return null;
-        }
-        return jwtUserLoginInfo.getClientType();
+        return jwtUserLoginInfo.getUserType();
     }
 
 }
