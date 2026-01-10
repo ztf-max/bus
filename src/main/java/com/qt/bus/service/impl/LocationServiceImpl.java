@@ -3,7 +3,6 @@ package com.qt.bus.service.impl;
 import com.qt.bus.dao.model.UserLocation;
 import com.qt.bus.dao.repository.UserLocationRepository;
 import com.qt.bus.dto.LocationRequest;
-import com.qt.bus.jwt.AuthLoginContextHolder;
 import com.qt.bus.service.LocationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +21,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void reportLocation(LocationRequest request) {
-        // 从登录上下文获取用户信息
-        Long userId = AuthLoginContextHolder.getLoginUserId();
-        String userType = AuthLoginContextHolder.getLoginUserType();
-        String userName = AuthLoginContextHolder.getLoginUserName();
-
+    public void reportLocation(Long userId, String userType, String userName, LocationRequest request) {
         if (userId == null) {
             return;
         }

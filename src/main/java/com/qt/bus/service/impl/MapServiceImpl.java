@@ -5,9 +5,6 @@ import com.qt.bus.dao.model.UserLocation;
 import com.qt.bus.dao.repository.UserLocationRepository;
 import com.qt.bus.dao.repository.UserRepository;
 import com.qt.bus.dto.*;
-import com.qt.bus.exception.SystemException;
-import com.qt.bus.jwt.AuthLoginContextHolder;
-import com.qt.bus.service.LocationService;
 import com.qt.bus.service.MapService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -33,9 +30,6 @@ public class MapServiceImpl implements MapService {
     @Resource
     private UserRepository userRepository;
 
-    @Resource
-    private LocationService locationService;
-
     /**
      * 用户类型：司机
      */
@@ -47,19 +41,15 @@ public class MapServiceImpl implements MapService {
     private static final String USER_TYPE_USER = "user";
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public MapLocationResponse getMapLocations(MapLocationRequest request) {
-        // 1. 获取当前用户信息
-        Long currentUserId = AuthLoginContextHolder.getLoginUserId();
-        String userType = AuthLoginContextHolder.getLoginUserType();
+    @Transactional(readOnly = true)
+    public MapLocationResponse getMapLocations(Long currentUserId, String userType) {
+        if (currentUserId == null) {
+            return null;
+        }
 
-       
-        log.info("获取地图位置 - 用户ID: {}, 用户类型: {}", currentUserId, userType);
+        log.info("查询地图位置数据 - 用户ID: {}, 用户类型: {}", currentUserId, userType);
 
-        // 2. 先更新当前用户的位置
-        updateCurrentUserLocation(request);
-
-        // 3. 根据用户类型返回不同数据
+        // 根据用户类型返回不同数据
         if (USER_TYPE_DRIVER.equalsIgnoreCase(userType)) {
             // 司机端：返回所有司机 + 所有乘客
             return getDriverMapView(currentUserId);
@@ -69,19 +59,7 @@ public class MapServiceImpl implements MapService {
         }
     }
 
-    /**
-     * 更新当前用户位置
-     */
-    private void updateCurrentUserLocation(MapLocationRequest request) {
-        if (request.getLatitude() != null && request.getLongitude() != null) {
-            LocationRequest locationRequest = new LocationRequest();
-            locationRequest.setLatitude(request.getLatitude());
-            locationRequest.setLongitude(request.getLongitude());
-            locationRequest.setHeading(request.getHeading());
-            locationRequest.setSpeed(request.getSpeed());
-            locationService.reportLocation(locationRequest);
-        }
-    }
+    // 移除 updateCurrentUserLocation 方法，因为前端直接上报位置
 
     /**
      * 获取司机端地图视图

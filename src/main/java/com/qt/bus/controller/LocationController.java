@@ -1,6 +1,7 @@
 package com.qt.bus.controller;
 
 import com.qt.bus.dto.LocationRequest;
+import com.qt.bus.jwt.AuthLoginContextHolder;
 import com.qt.bus.model.response.Result;
 import com.qt.bus.service.LocationService;
 import jakarta.annotation.Resource;
@@ -26,7 +27,11 @@ public class LocationController {
      */
     @PostMapping("/report")
     public Result<Boolean> reportLocation(@RequestBody LocationRequest request) {
-        locationService.reportLocation(request);
+        Long userId = AuthLoginContextHolder.getLoginUserId();
+        String userType = AuthLoginContextHolder.getLoginUserType();
+        String userName = AuthLoginContextHolder.getLoginUserName();
+        
+        locationService.reportLocation(userId, userType, userName, request);
         return Result.success(true);
     }
 }

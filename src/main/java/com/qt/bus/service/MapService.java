@@ -1,6 +1,5 @@
 package com.qt.bus.service;
 
-import com.qt.bus.dto.MapLocationRequest;
 import com.qt.bus.dto.MapLocationResponse;
 
 /**
@@ -14,8 +13,9 @@ public interface MapService {
      * - 司机：所有司机位置 + 所有乘客位置
      * - 乘客：所有司机位置 + 自己的位置
      *
-     * @param request 当前用户位置信息
+     * @param userId   当前用户ID
+     * @param userType 当前用户类型（user/driver）
      * @return 地图位置数据
      */
-    MapLocationResponse getMapLocations(MapLocationRequest request);
+    MapLocationResponse getMapLocations(Long userId, String userType);
 }
