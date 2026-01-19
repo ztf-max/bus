@@ -2,6 +2,7 @@ package com.qt.bus.service.impl;
 
 import com.qt.bus.dao.model.User;
 import com.qt.bus.dao.repository.UserRepository;
+import com.qt.bus.dto.PasswordLoginRequest;
 import com.qt.bus.dto.WxLoginRequest;
 import com.qt.bus.dto.WxLoginResponse;
 import com.qt.bus.dto.WxSessionResponse;
@@ -11,6 +12,7 @@ import com.qt.bus.service.UserService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
@@ -30,6 +32,9 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private RestClient restClient;
+
+    @Resource
+    private BCryptPasswordEncoder bcryptPasswordEncoder;
 
     /**
      * 微信小程序AppID
@@ -170,6 +175,74 @@ public class UserServiceImpl implements UserService {
             log.error("调用微信接口失败", e);
             throw new SystemException("微信登录失败，请稍后重试", 500);
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public WxLoginResponse passwordLogin(PasswordLoginRequest request) {
+        // 1. 校验参数
+        if (request.getAccount() == null || request.getAccount().trim().isEmpty()) {
+            throw new SystemException("账户不能为空", 400);
+        }
+        if (request.getPassword() == null || request.getPassword().isEmpty()) {
+            throw new SystemException("密码不能为空", 400);
+        }
+
+        String account = request.getAccount().trim();
+        String password = request.getPassword();
+        String platform = request.getPlatform();
+        
+        // 确定用户类型
+        String userType;
+        if (platform != null && !platform.isEmpty()) {
+            if (USER_TYPE_DRIVER.equalsIgnoreCase(platform)) {
+                userType = USER_TYPE_DRIVER;
+            } else {
+                userType = USER_TYPE_USER;
+            }
+        } else {
+            userType = USER_TYPE_USER; // 默认为乘客
+        }
+
+        // 2. 根据手机号查询用户（支持按用户类型过滤）
+        User user;
+        if (userType != null) {
+            user = userRepository.getByPhoneAndUserType(account, userType);
+        } else {
+            user = userRepository.getByPhone(account);
+        }
+
+        // 3. 验证用户是否存在
+        if (user == null) {
+            log.warn("账户密码登录失败 - 用户不存在: account={}, userType={}", account, userType);
+            throw new SystemException("账户或密码错误", 401);
+        }
+
+        // 4. 验证密码是否已设置
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            log.warn("账户密码登录失败 - 用户未设置密码: userId={}, account={}", user.getId(), account);
+            throw new SystemException("该账户未设置密码，请使用其他登录方式", 401);
+        }
+
+        // 5. 验证密码
+        if (!bcryptPasswordEncoder.matches(password, user.getPassword())) {
+            log.warn("账户密码登录失败 - 密码错误: userId={}, account={}", user.getId(), account);
+            throw new SystemException("账户或密码错误", 401);
+        }
+
+        // 6. 生成JWT Token（30天有效期，Token会自动保存到数据库和上下文）
+        String token = jwtUtils.createToken(user.getNickname(), userType, user.getId(), userType, user.getId());
+
+        log.info("账户密码登录成功 - userId={}, account={}, userType={}", user.getId(), account, userType);
+
+        // 7. 返回登录结果
+        return WxLoginResponse.builder()
+                .userId(user.getId())
+                .token(token)
+                .nickname(user.getNickname())
+                .avatarUrl(user.getAvatarUrl())
+                .isNewUser(false) // 账户密码登录不会创建新用户
+                .build();
     }
 
 }

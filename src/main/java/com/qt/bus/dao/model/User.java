@@ -44,6 +44,11 @@ public class User extends BaseDomain {
     private String phone;
 
     /**
+     * 密码（BCrypt加密）
+     */
+    private String password;
+
+    /**
      * 头像URL
      */
     private String avatarUrl;

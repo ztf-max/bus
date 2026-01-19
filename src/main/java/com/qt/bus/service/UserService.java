@@ -1,5 +1,6 @@
 package com.qt.bus.service;
 
+import com.qt.bus.dto.PasswordLoginRequest;
 import com.qt.bus.dto.WxLoginRequest;
 import com.qt.bus.dto.WxLoginResponse;
 
@@ -15,4 +16,12 @@ public interface UserService {
      * @return 登录响应（包含token）
      */
     WxLoginResponse wxLogin(WxLoginRequest request);
+
+    /**
+     * 账户密码登录
+     *
+     * @param request 登录请求
+     * @return 登录响应（包含token）
+     */
+    WxLoginResponse passwordLogin(PasswordLoginRequest request);
 }

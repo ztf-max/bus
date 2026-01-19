@@ -65,4 +65,30 @@ public class UserRepository extends ServiceImpl<UserMapper, User> {
     public List<User> listAllUsers() {
         return listByUserType(USER_TYPE_USER);
     }
+
+    /**
+     * 根据手机号查询用户
+     *
+     * @param phone 手机号
+     * @return 用户信息，不存在则返回null
+     */
+    public User getByPhone(String phone) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getPhone, phone);
+        return this.getOne(queryWrapper);
+    }
+
+    /**
+     * 根据手机号和用户类型查询用户
+     *
+     * @param phone 手机号
+     * @param userType 用户类型（user/driver）
+     * @return 用户信息，不存在则返回null
+     */
+    public User getByPhoneAndUserType(String phone, String userType) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getPhone, phone);
+        queryWrapper.eq(User::getUserType, userType);
+        return this.getOne(queryWrapper);
+    }
 }
