@@ -4,6 +4,7 @@
 
 - [1. 用户模块](#1-用户模块)
   - [1.1 微信小程序登录](#11-微信小程序登录)
+  - [1.2 账户密码登录](#12-账户密码登录)
 - [2. 位置模块](#2-位置模块)
   - [2.1 位置上报](#21-位置上报)
 - [3. 地图模块](#3-地图模块)
@@ -135,6 +136,120 @@
 2. 首次登录会自动创建用户记录
 3. 乘客和司机共用同一个用户表，通过 `user_type` 字段区分
 4. Token 会自动保存到数据库，支持多端互踢
+
+---
+
+### 1.2 账户密码登录
+
+**接口描述：** 使用手机号和密码登录，支持乘客端和司机端
+
+**接口地址：** `POST /user/password-login`
+
+**是否需要登录：** 否
+
+#### 请求参数
+
+**Content-Type：** `application/json`
+
+**Body 参数：**
+
+| 参数名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| account | String | 是 | 手机号或用户名 |
+| password | String | 是 | 密码 |
+| platform | String | 否 | 平台类型：`user`-乘客端, `driver`-司机端（默认：user） |
+
+**请求示例：**
+
+```json
+{
+  "account": "13800138000",
+  "password": "123456",
+  "platform": "user"
+}
+```
+
+#### 响应结果
+
+**成功响应：**
+
+```json
+{
+  "isSucceed": true,
+  "code": 200,
+  "msg": "操作成功!",
+  "data": {
+    "userId": 1001,
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJxdC1idXMiLCJpYXQiOjE3MDQwNjcyMDAsImV4cCI6MTcwNjc0NTYwMCwidXNlcl9pZCI6MTAwMSwibmlja19uYW1lIjoi5byg5LiJIiwidXNlcl90eXBlIjoidXNlciJ9.xxx",
+    "nickname": "张三",
+    "avatarUrl": "https://thirdwx.qlogo.cn/xxx.jpg",
+    "isNewUser": false
+  }
+}
+```
+
+**响应字段说明：**
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| userId | Long | 用户ID |
+| token | String | JWT Token（有效期30天） |
+| nickname | String | 用户昵称 |
+| avatarUrl | String | 用户头像URL |
+| isNewUser | Boolean | 是否是新用户（账户密码登录始终为 false） |
+
+**失败响应：**
+
+**账户或密码错误：**
+
+```json
+{
+  "isSucceed": false,
+  "code": 401,
+  "msg": "账户或密码错误",
+  "data": null
+}
+```
+
+**用户未设置密码：**
+
+```json
+{
+  "isSucceed": false,
+  "code": 401,
+  "msg": "该账户未设置密码，请使用其他登录方式",
+  "data": null
+}
+```
+
+**参数错误：**
+
+```json
+{
+  "isSucceed": false,
+  "code": 400,
+  "msg": "账户不能为空",
+  "data": null
+}
+```
+
+#### 业务逻辑
+
+1. **参数校验**：验证账户和密码不能为空
+2. **用户查询**：根据手机号和用户类型（platform）查询用户
+3. **密码验证**：验证用户是否已设置密码，并验证密码是否正确
+4. **Token生成**：登录成功后生成JWT Token（有效期30天）
+5. **用户类型**：根据 `platform` 参数区分乘客端和司机端，默认为乘客端
+
+#### 注意事项
+
+1. `account` 字段支持手机号或用户名，系统会根据手机号查询用户
+2. 密码验证使用 BCrypt 加密算法（当前密码验证逻辑可能被注释，需要确认）
+3. 如果用户未设置密码，会返回错误提示，需要使用其他登录方式（如微信登录）
+4. `platform` 参数用于区分乘客端和司机端，如果不传则默认为 `user`（乘客端）
+5. 账户密码登录不会创建新用户，只支持已注册用户的登录
+6. Token 会自动保存到数据库，支持多端互踢
+7. 同一手机号可能同时存在乘客和司机两种类型的账户，需要通过 `platform` 参数指定登录类型
 
 ---
 
@@ -614,6 +729,7 @@ CREATE TABLE `users` (
   `nickname` varchar(64) DEFAULT NULL COMMENT '昵称',
   `real_name` varchar(32) DEFAULT NULL COMMENT '真实姓名',
   `phone` varchar(20) DEFAULT NULL COMMENT '手机号',
+  `password` varchar(255) DEFAULT NULL COMMENT '密码（BCrypt加密）',
   `avatar_url` varchar(255) DEFAULT NULL COMMENT '头像',
   `plate_number` varchar(20) DEFAULT NULL COMMENT '车牌号（司机专用）',
   `vehicle_desc` varchar(100) DEFAULT NULL COMMENT '车辆描述（司机专用）',
